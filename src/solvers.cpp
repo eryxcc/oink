@@ -17,6 +17,7 @@
 #include "solvers.hpp"
 
 #include "zlk.hpp"
+#include "experimental.hpp"
 #include "pp.hpp"
 #include "ppp.hpp"
 #include "rr.hpp"
@@ -36,6 +37,12 @@ namespace pg {
 Solvers::Solvers()
 {
     add("zlk", "parallel Zielonka", 1, [] (Oink* oink, Game* game) { return new ZLKSolver(oink, game); });
+    add("ez", "Experimental: ZLK", 1, [] (Oink* oink, Game* game) { return new ExperimentalSolver(oink, game, zielonka | quick_priority); });
+    add("ezm", "Experimental: ZLK/memo", 1, [] (Oink* oink, Game* game) { return new ExperimentalSolver(oink, game, zielonka | quick_priority | memoize); });
+    add("ep", "Experimental: precision", 1, [] (Oink* oink, Game* game) { return new ExperimentalSolver(oink, game, 0); });
+    add("epq", "Experimental: precision/quick", 1, [] (Oink* oink, Game* game) { return new ExperimentalSolver(oink, game, quick_priority); });
+    add("epqm", "Experimental: precision/quick/memo", 1, [] (Oink* oink, Game* game) { return new ExperimentalSolver(oink, game, quick_priority | memoize); });
+    add("epm", "Experimental: precision/quick/memo", 1, [] (Oink* oink, Game* game) { return new ExperimentalSolver(oink, game, memoize); });
     add("uzlk", "unoptimized Zielonka", 1, [] (Oink* oink, Game* game) { return new UnoptimizedZLKSolver(oink, game); });
     add("npp", "priority promotion NPP", 0, [] (Oink* oink, Game* game) { return new NPPSolver(oink, game); });
     add("pp", "priority promotion PP", 0, [] (Oink* oink, Game* game) { return new PPSolver(oink, game); });
