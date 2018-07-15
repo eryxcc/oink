@@ -42,7 +42,9 @@ Solvers::Solvers()
     add("ep", "Experimental: precision", 1, [] (Oink* oink, Game* game) { return new ExperimentalSolver(oink, game, 0); });
     add("epq", "Experimental: precision/quick", 1, [] (Oink* oink, Game* game) { return new ExperimentalSolver(oink, game, quick_priority); });
     add("epqm", "Experimental: precision/quick/memo", 1, [] (Oink* oink, Game* game) { return new ExperimentalSolver(oink, game, quick_priority | memoize); });
-    add("epm", "Experimental: precision/quick/memo", 1, [] (Oink* oink, Game* game) { return new ExperimentalSolver(oink, game, memoize); });
+    add("epm", "Experimental: precision/memo", 1, [] (Oink* oink, Game* game) { return new ExperimentalSolver(oink, game, memoize); });
+    add("epqa", "Experimental: precision/quick/auto", 1, [] (Oink* oink, Game* game) { return new ExperimentalSolver(oink, game, quick_priority | auto_reduce); });
+    add("epqma", "Experimental: precision/quick/memo/auto", 1, [] (Oink* oink, Game* game) { return new ExperimentalSolver(oink, game, quick_priority | auto_reduce | memoize); });
     add("uzlk", "unoptimized Zielonka", 1, [] (Oink* oink, Game* game) { return new UnoptimizedZLKSolver(oink, game); });
     add("npp", "priority promotion NPP", 0, [] (Oink* oink, Game* game) { return new NPPSolver(oink, game); });
     add("pp", "priority promotion PP", 0, [] (Oink* oink, Game* game) { return new PPSolver(oink, game); });

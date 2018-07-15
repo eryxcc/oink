@@ -126,7 +126,7 @@ void zsolver::run(const std::vector<int>& vs, int cat_base, std::array<int, 2> p
     int us = (maxprio&1);
     int opponent = us^1;
 
-    if(precision[us] <= 0) {
+    if(precision[us] <= 1) {
       for(auto v: vs) {
         if(g->owner[v] == (maxprio&1)) strategy[v] = -1;
         else strategy[v] = 999;
@@ -142,7 +142,19 @@ void zsolver::run(const std::vector<int>& vs, int cat_base, std::array<int, 2> p
     attractor(vs, us, cat_base, cat_hiprio);
 
     auto subprecision = precision;
-    if(mode == 0 || mode == 2) subprecision[opponent]--;
+
+    if((flags & auto_reduce) && mode < 2) {
+      if(subprecision[0] > (int)vs.size()) subprecision[0] = vs.size();
+      if(subprecision[1] > (int)vs.size()) subprecision[1] = vs.size();
+      }
+
+    if(mode == 0) subprecision[opponent] >>= 1;
+    if(mode == 2) subprecision[opponent] = (subprecision[opponent] - 1) >> 1;
+
+    if((flags & auto_reduce) && mode == 2) {
+      if(subprecision[0] > (int)vs.size()) subprecision[0] = vs.size();
+      if(subprecision[1] > (int)vs.size()) subprecision[1] = vs.size();
+      }
 
     std::vector<int> subgame;
     for(auto v: vs) if(vtype[v] == cat_base) subgame.push_back(v);
@@ -247,11 +259,8 @@ void ExperimentalSolver::run()
       for(auto e: in[i])
         fmt::printf(logger, "In-edge from %d\n", (int) e);
       } */
-
-    int prec = 0;
-    while((1 << prec) < n_nodes) prec++;
     
-    fmt::printf(logger, "initial precision = %d\n", prec);
+    // fmt::printf(logger, "initial precision = %d\n", prec);
 
     int maxprio = 0;
     for(auto v: vset) maxprio = std::max(maxprio, priority[v]);
@@ -259,7 +268,7 @@ void ExperimentalSolver::run()
     fmt::printf(logger, "max priority = %d\n", maxprio);
 
     zs.iters = 0;
-    zs.run(vset, cat, {prec, prec}, (flags&zielonka) ? 3 : 0, (flags&quick_priority)?-1:maxprio);
+    zs.run(vset, cat, {n_nodes, n_nodes}, (flags&zielonka) ? 3 : 0, (flags&quick_priority)?-1:maxprio);
 
     fmt::printf(logger, "solved in %d iterations\n", zs.iters);
 

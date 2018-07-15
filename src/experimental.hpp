@@ -27,6 +27,7 @@ namespace pg {
 static const int zielonka = 1;
 static const int memoize = 2;
 static const int quick_priority = 4;
+static const int auto_reduce = 8;
 
 class ExperimentalSolver : public Solver
 {
