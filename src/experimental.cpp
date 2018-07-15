@@ -195,11 +195,16 @@ void zsolver::run(const std::vector<int>& vs, int cat_base, std::array<int, 2> p
       }
 
     attractor(vs, opponent, cat_hiprio, cat_opponent_wins);
+    
+    int sub_maxprio = 0;
 
     subgame.clear();
-    for(auto& v: vs) if(vtype[v] == cat_hiprio) subgame.push_back(v);
+    for(auto& v: vs) if(vtype[v] == cat_hiprio) {
+      subgame.push_back(v);
+      if(g->priority[v] > sub_maxprio) sub_maxprio = g->priority[v];
+      }
 
-    run(subgame, cat_hiprio, precision, mode == 1 ? 2 : mode, mprio);
+    run(subgame, cat_hiprio, precision, ((sub_maxprio&1) != us) ? 0 : mode == 1 ? 2 : mode, mprio);
 
     if(flags & memoize) {
       auto& m = memo[{precision, vs}];
