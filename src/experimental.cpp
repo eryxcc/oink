@@ -226,6 +226,7 @@ void ExperimentalSolver::run()
     zs.g = game;
     zs.strategy.resize(n_nodes);
     zs.vtype.resize(n_nodes);
+    zs.flags = flags;
     int cat = new_category();
     for(int& i: zs.vtype) i = cat;
     std::vector<int> vset;
